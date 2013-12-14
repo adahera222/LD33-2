@@ -1,0 +1,9 @@
+*.class
+war/
+gwt-unitCache/
+.settings/
+gen/
+bin/
+
+Thumbs.db
+
