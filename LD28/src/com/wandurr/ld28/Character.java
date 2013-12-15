@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Player
+public class Character
 {
 	public enum Direction
 	{
@@ -19,37 +19,38 @@ public class Player
 	public enum State
 	{
 		IDLE, WALKING, DYING
-
 	}
 
-	public static final float	ACCELERATION	= 500f;
-	public static final float	DAMP			= 0.95f;
+	public static final float	DAMP			= 0.93f;
 	public static final float	MAX_VEL			= 500f;
+
+	private Vector2				acceleration	= new Vector2();
+	private Vector2				velocity		= new Vector2();
+
+	private State				state			= State.IDLE;
+	private Direction			facing			= Direction.RIGHT;
 
 	private Texture				texture;
 	private Sprite				sprite;
-	private Vector2				position		= new Vector2();
-	private Vector2				acceleration	= new Vector2();
-	private Vector2				velocity		= new Vector2();
-	private Rectangle			bounds			= new Rectangle();
-	private State				state			= State.IDLE;
-	private Direction			facing			= Direction.RIGHT;
 	private TextureRegion		region;
 
-	public Player()
+	private Weapon				weapon;
+
+	public Character(float size, float posX, float posY, String texture_path)
 	{
-		texture = new Texture(Gdx.files.internal("data/player.png"));
+		texture = new Texture(Gdx.files.internal(texture_path));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
 		region = new TextureRegion(texture, 0, 0, texture.getWidth(), texture.getHeight());
 
-		bounds.setSize(128);
-		setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-
-		sprite = new Sprite(texture);
-		sprite.setSize(bounds.width, bounds.height);
+		sprite = new Sprite(region);
+		sprite.setSize(size, size * region.getRegionWidth() / region.getRegionHeight());
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
-		sprite.setPosition(position.x, position.y);
+		setPosition(posX, posY);
+
+		weapon = new Weapon(posX + sprite.getWidth() / 2, posY + sprite.getHeight() / 2, 32, 64, "data/sword.png");
+
+		setFacing(Direction.RIGHT);
 	}
 
 	public void dispose()
@@ -59,23 +60,32 @@ public class Player
 
 	public void draw(SpriteBatch batch)
 	{
-		batch.draw(region, position.x, position.y, bounds.width, bounds.height);
+		// batch.draw(region, sprite.getX(), sprite.getY(), sprite.getBoundingRectangle().width, sprite.getBoundingRectangle().height);
+		// sprite.setRotation(sprite.getRotation() + 0.1f);
+		sprite.draw(batch);
+		weapon.draw(batch);
 	}
 
 	public Vector2 getPosition()
 	{
-		return position;
+		return new Vector2(sprite.getX(), sprite.getY());
 	}
 
-	private void setPosition(float x, float y)
+	public void setPosition(float x, float y)
 	{
-		setPosition(new Vector2(x, y));
+		Vector2 diff = new Vector2(getPosition());
+
+		sprite.setPosition(x, y);
+		diff.sub(getPosition());
+		if(weapon != null)
+		{
+			weapon.move(diff);
+		}
 	}
 
 	public void setPosition(Vector2 position)
 	{
-		this.position = position;
-		this.bounds.setPosition(position);
+		setPosition(position.x, position.y);
 	}
 
 	public Vector2 getAcceleration()
@@ -100,12 +110,12 @@ public class Player
 
 	public Rectangle getBounds()
 	{
-		return bounds;
+		return sprite.getBoundingRectangle();
 	}
 
 	public void setBounds(Rectangle bounds)
 	{
-		this.bounds = bounds;
+		sprite.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
 
 	public State getState()
@@ -123,9 +133,30 @@ public class Player
 		return facing;
 	}
 
+	public Weapon getWeapon()
+	{
+		return weapon;
+	}
+
 	public void setFacing(Direction facing)
 	{
 		this.facing = facing;
+		if(facing.equals(Direction.LEFT))
+		{
+			weapon.setRotation(90);
+		}
+		else if(facing.equals(Direction.RIGHT))
+		{
+			weapon.setRotation(-90);
+		}
+		else if(facing.equals(Direction.UP))
+		{
+			weapon.setRotation(0);
+		}
+		else if(facing.equals(Direction.DOWN))
+		{
+			weapon.setRotation(180);
+		}
 	}
 
 	public void update(float delta)
@@ -156,14 +187,20 @@ public class Player
 		}
 
 		velocity.scl(delta);
+		Vector2 position = getPosition();
 		position.add(velocity);
 		setPosition(position);
-
-		// sprite.setPosition(position.x, position.y);
 
 		velocity.scl(1 / delta);
 
 		velocity.scl(DAMP);
+
+		weapon.update(delta);
+	}
+
+	public void attack()
+	{
+		weapon.swing(facing);
 	}
 
 }

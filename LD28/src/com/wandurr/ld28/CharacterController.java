@@ -2,19 +2,22 @@ package com.wandurr.ld28;
 
 import java.util.HashMap;
 
-import com.wandurr.ld28.Player.Direction;
+import com.badlogic.gdx.math.Vector2;
+import com.wandurr.ld28.Character.Direction;
 
-public class PlayerController
+public class CharacterController
 {
 	enum Keys
 	{
-		LEFT, RIGHT, UP, DOWN
+		LEFT, RIGHT, UP, DOWN, ATTACK
 	}
 
-	private final Player					player;
-	private final HashMap<Keys, Boolean>	keys	= new HashMap<PlayerController.Keys, Boolean>();
+	public static final float				ACCELERATION	= 1000f;
 
-	public PlayerController(Player player)
+	private final Character					player;
+	private final HashMap<Keys, Boolean>	keys			= new HashMap<CharacterController.Keys, Boolean>();
+
+	public CharacterController(Character player)
 	{
 		this.player = player;
 
@@ -22,6 +25,7 @@ public class PlayerController
 		keys.put(Keys.RIGHT, false);
 		keys.put(Keys.UP, false);
 		keys.put(Keys.DOWN, false);
+		keys.put(Keys.ATTACK, false);
 	}
 
 	public void init()
@@ -68,6 +72,16 @@ public class PlayerController
 		keys.get(keys.put(Keys.DOWN, false));
 	}
 
+	public void attackPressed()
+	{
+		keys.get(keys.put(Keys.ATTACK, true));
+	}
+
+	public void attackReleased()
+	{
+		keys.get(keys.put(Keys.ATTACK, false));
+	}
+
 	public void update(final float delta)
 	{
 		processInput();
@@ -75,26 +89,33 @@ public class PlayerController
 
 	private boolean processInput()
 	{
+		Vector2 acceleration = player.getAcceleration();
 		if(keys.get(Keys.LEFT))
 		{
 			player.setFacing(Direction.LEFT);
-			player.getAcceleration().x = -Player.ACCELERATION;
+			acceleration.x = -ACCELERATION;
 		}
-		else if(keys.get(Keys.RIGHT))
+		if(keys.get(Keys.RIGHT))
 		{
 			player.setFacing(Direction.RIGHT);
-			player.getAcceleration().x = Player.ACCELERATION;
+			acceleration.x = ACCELERATION;
 		}
-		else if(keys.get(Keys.UP))
+		if(keys.get(Keys.UP))
 		{
 			player.setFacing(Direction.UP);
-			player.getAcceleration().y = Player.ACCELERATION;
+			acceleration.y = ACCELERATION;
 		}
-		else if(keys.get(Keys.DOWN))
+		if(keys.get(Keys.DOWN))
 		{
 			player.setFacing(Direction.DOWN);
-			player.getAcceleration().y = -Player.ACCELERATION;
+			acceleration.y = -ACCELERATION;
 		}
+		if(keys.get(Keys.ATTACK))
+		{
+			player.attack();
+			attackReleased();
+		}
+		player.setAcceleration(acceleration);
 
 		return false;
 	}

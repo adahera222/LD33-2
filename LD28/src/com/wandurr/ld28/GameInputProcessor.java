@@ -6,9 +6,9 @@ import com.badlogic.gdx.InputProcessor;
 
 public class GameInputProcessor implements InputProcessor
 {
-	private PlayerController	player_controller;
+	private CharacterController	player_controller;
 
-	public GameInputProcessor(PlayerController character_controller)
+	public GameInputProcessor(CharacterController character_controller)
 	{
 		this.player_controller = character_controller;
 	}
@@ -31,6 +31,10 @@ public class GameInputProcessor implements InputProcessor
 		if(keycode == Keys.DOWN)
 		{
 			player_controller.downPressed();
+		}
+		if(keycode == Keys.Z)
+		{
+			player_controller.attackPressed();
 		}
 		return true;
 	}
@@ -60,6 +64,10 @@ public class GameInputProcessor implements InputProcessor
 		if(keycode == Keys.DOWN)
 		{
 			player_controller.downReleased();
+		}
+		if(keycode == Keys.Z)
+		{
+			player_controller.attackReleased();
 		}
 		return true;
 	}
