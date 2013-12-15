@@ -32,6 +32,7 @@ public class EnemyController
 			acceleration.x += -ACCELERATION;
 			enemy.setFacing(Direction.LEFT);
 		}
+
 		if(player_pos.y - 10 > enemy_pos.y)
 		{
 			acceleration.y += ACCELERATION;
@@ -41,6 +42,16 @@ public class EnemyController
 		{
 			acceleration.y += -ACCELERATION;
 			enemy.setFacing(Direction.DOWN);
+		}
+
+		if(Math.abs(player_pos.x - enemy_pos.x) < Weapon.SWING_DISTANCE)
+		{
+			enemy.attack();
+		}
+
+		if(Math.abs(player_pos.y - enemy_pos.y) < Weapon.SWING_DISTANCE)
+		{
+			enemy.attack();
 		}
 		enemy.setAcceleration(acceleration);
 	}

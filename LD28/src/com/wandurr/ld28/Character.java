@@ -35,6 +35,7 @@ public class Character
 	private TextureRegion		region;
 
 	private Weapon				weapon;
+	private boolean				attacking;
 
 	public Character(float size, float posX, float posY, String texture_path)
 	{
@@ -48,7 +49,7 @@ public class Character
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		setPosition(posX, posY);
 
-		weapon = new Weapon(posX + sprite.getWidth() / 2, posY + sprite.getHeight() / 2, 32, 64, "data/sword.png");
+		weapon = new Weapon(this, posX + sprite.getWidth() / 2, posY + sprite.getHeight() / 2, 32, 64, "data/sword.png");
 
 		setFacing(Direction.RIGHT);
 	}
@@ -200,7 +201,16 @@ public class Character
 
 	public void attack()
 	{
-		weapon.swing(facing);
+		if(!attacking)
+		{
+			weapon.swing(facing);
+			attacking = true;
+		}
+	}
+
+	public void stopAttack()
+	{
+		attacking = false;
 	}
 
 }

@@ -1,6 +1,8 @@
 package com.wandurr.ld28;
 
+import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 
 import com.badlogic.gdx.Gdx;
@@ -21,9 +23,11 @@ public class Weapon
 	private TextureRegion		region;
 	private TweenManager		tween_manager;
 	private WeaponTweenAccessor	weapon_accessor;
+	private Character			character;
 
-	public Weapon(float posX, float posY, float width, float height, String texture_path)
+	public Weapon(Character character, float posX, float posY, float width, float height, String texture_path)
 	{
+		this.character = character;
 		texture = new Texture(Gdx.files.internal(texture_path));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
@@ -83,32 +87,72 @@ public class Weapon
 			Tween.to(this, WeaponTweenAccessor.POSITION_X, 0.2f)
 					.targetRelative(0)
 					.waypoint(-SWING_DISTANCE)
+					.setCallback(new TweenCallback()
+					{
+						@Override
+						public void onEvent(int type, BaseTween<?> source)
+						{
+							if(type == TweenCallback.COMPLETE)
+							{
+								character.stopAttack();
+							}
+						}
+					})
 					.start(tween_manager);
-			// sprite.setPosition(sprite.getX() - SWING_DISTANCE, sprite.getY());
 		}
 		else if(direction.equals(Direction.RIGHT))
 		{
 			Tween.to(this, WeaponTweenAccessor.POSITION_X, 0.2f)
 					.targetRelative(0)
 					.waypoint(SWING_DISTANCE)
+					.setCallback(new TweenCallback()
+					{
+						@Override
+						public void onEvent(int type, BaseTween<?> source)
+						{
+							if(type == TweenCallback.COMPLETE)
+							{
+								character.stopAttack();
+							}
+						}
+					})
 					.start(tween_manager);
-			// sprite.setPosition(sprite.getX() + SWING_DISTANCE, sprite.getY());
 		}
 		else if(direction.equals(Direction.UP))
 		{
 			Tween.to(this, WeaponTweenAccessor.POSITION_Y, 0.2f)
 					.targetRelative(0)
 					.waypoint(SWING_DISTANCE)
+					.setCallback(new TweenCallback()
+					{
+						@Override
+						public void onEvent(int type, BaseTween<?> source)
+						{
+							if(type == TweenCallback.COMPLETE)
+							{
+								character.stopAttack();
+							}
+						}
+					})
 					.start(tween_manager);
-			// sprite.setPosition(sprite.getX(), sprite.getY() + SWING_DISTANCE);
 		}
 		else if(direction.equals(Direction.DOWN))
 		{
 			Tween.to(this, WeaponTweenAccessor.POSITION_Y, 0.2f)
 					.targetRelative(0)
 					.waypoint(-SWING_DISTANCE)
+					.setCallback(new TweenCallback()
+					{
+						@Override
+						public void onEvent(int type, BaseTween<?> source)
+						{
+							if(type == TweenCallback.COMPLETE)
+							{
+								character.stopAttack();
+							}
+						}
+					})
 					.start(tween_manager);
-			// sprite.setPosition(sprite.getX(), sprite.getY() - SWING_DISTANCE);
 		}
 
 	}
