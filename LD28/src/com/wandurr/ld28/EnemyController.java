@@ -44,15 +44,16 @@ public class EnemyController
 			enemy.setFacing(Direction.DOWN);
 		}
 
-		if(Math.abs(player_pos.x - enemy_pos.x) < Weapon.SWING_DISTANCE)
-		{
-			enemy.attack();
-		}
-
-		if(Math.abs(player_pos.y - enemy_pos.y) < Weapon.SWING_DISTANCE)
+		if(Math.abs(player_pos.x - enemy_pos.x) < Weapon.SWING_DISTANCE * 2.5f
+			&& Math.abs(player_pos.y - enemy_pos.y) < Weapon.SWING_DISTANCE * 2.5f)
 		{
 			enemy.attack();
 		}
 		enemy.setAcceleration(acceleration);
+	}
+
+	public Character getEnemy()
+	{
+		return enemy;
 	}
 }

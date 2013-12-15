@@ -19,14 +19,14 @@ public class WeaponTweenAccessor implements TweenAccessor<Weapon>
 		switch(tweenType)
 		{
 			case POSITION_X:
-				returnValues[0] = target.getPosition().x;
+				returnValues[0] = target.getRelativePosition().x;
 				return 1;
 			case POSITION_Y:
-				returnValues[0] = target.getPosition().x;
+				returnValues[0] = target.getRelativePosition().x;
 				return 1;
 			case POSITION_XY:
-				returnValues[0] = target.getPosition().x;
-				returnValues[1] = target.getPosition().y;
+				returnValues[0] = target.getRelativePosition().x;
+				returnValues[1] = target.getRelativePosition().y;
 				return 2;
 			default:
 				assert false;
@@ -40,15 +40,15 @@ public class WeaponTweenAccessor implements TweenAccessor<Weapon>
 		switch(tweenType)
 		{
 			case POSITION_X:
-				target.setPosition(newValues[0], target.getPosition().y);
+				target.setRelativePosition(newValues[0], target.getRelativePosition().y);
 
 				break;
 			case POSITION_Y:
-				target.setPosition(target.getPosition().x, newValues[0]);
+				target.setRelativePosition(target.getRelativePosition().x, newValues[0]);
 
 				break;
 			case POSITION_XY:
-				target.setPosition(newValues[0], newValues[1]);
+				target.setRelativePosition(newValues[0], newValues[1]);
 
 				break;
 			default:

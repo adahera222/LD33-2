@@ -1,13 +1,18 @@
 package com.wandurr.ld28;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class LD28Game extends Game
 {
+	private BitmapFont	font;
 
 	@Override
 	public void create()
 	{
+		font = new BitmapFont(Gdx.files.internal("data/font.fnt"),
+								Gdx.files.internal("data/font.png"), false);
 		setScreen(new GameScreen());
 	}
 
@@ -39,5 +44,15 @@ public class LD28Game extends Game
 	public void resume()
 	{
 		super.resume();
+	}
+
+	public BitmapFont getFont()
+	{
+		return font;
+	}
+
+	public void setFont(BitmapFont font)
+	{
+		this.font = font;
 	}
 }

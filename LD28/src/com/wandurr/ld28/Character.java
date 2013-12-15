@@ -1,6 +1,12 @@
 package com.wandurr.ld28;
 
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenManager;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -36,9 +42,15 @@ public class Character
 
 	private Weapon				weapon;
 	private boolean				attacking;
+	private int					health;
+	private GameScreen			game_screen;
+	private boolean				taking_damage;
+	private TweenManager		tween_manager;
+	private CharacterAccessor	character_accessor;
 
-	public Character(float size, float posX, float posY, String texture_path)
+	public Character(GameScreen game_screen, float size, float posX, float posY, String texture_path)
 	{
+		this.game_screen = game_screen;
 		texture = new Texture(Gdx.files.internal(texture_path));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
@@ -52,6 +64,16 @@ public class Character
 		weapon = new Weapon(this, posX + sprite.getWidth() / 2, posY + sprite.getHeight() / 2, 32, 64, "data/sword.png");
 
 		setFacing(Direction.RIGHT);
+		attacking = false;
+		taking_damage = false;
+
+		tween_manager = new TweenManager();
+		character_accessor = new CharacterAccessor();
+		Tween.registerAccessor(Character.class, character_accessor);
+		Tween.setWaypointsLimit(3);
+		Tween.setCombinedAttributesLimit(4);
+
+		health = 10;
 	}
 
 	public void dispose()
@@ -197,6 +219,8 @@ public class Character
 		velocity.scl(DAMP);
 
 		weapon.update(delta);
+
+		tween_manager.update(delta);
 	}
 
 	public void attack()
@@ -211,6 +235,59 @@ public class Character
 	public void stopAttack()
 	{
 		attacking = false;
+	}
+
+	public void takeDamage()
+	{
+		if(!taking_damage)
+		{
+			taking_damage = true;
+			health -= 1;
+			Tween.to(this, CharacterAccessor.COLOR, 0.2f)
+					.target(1f, 1f, 1f, 1f)
+					.waypoint(1f, 1f, 1f, 0.5f)
+					.setCallback(new TweenCallback()
+					{
+						@Override
+						public void onEvent(int type, BaseTween<?> source)
+						{
+							if(type == TweenCallback.COMPLETE)
+							{
+								taking_damage = false;
+							}
+						}
+					})
+					.start(tween_manager);
+			if(health <= 0)
+			{
+				die();
+			}
+		}
+	}
+
+	public boolean isTakingDamage()
+	{
+		return taking_damage;
+	}
+
+	public void die()
+	{
+		game_screen.characterDied(this);
+	}
+
+	public Color getSpriteColor()
+	{
+		return sprite.getColor();
+	}
+
+	public void setSpriteColor(Color tint)
+	{
+		sprite.setColor(tint);
+	}
+
+	public int getHealth()
+	{
+		return health;
 	}
 
 }

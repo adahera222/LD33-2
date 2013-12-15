@@ -24,10 +24,12 @@ public class Weapon
 	private TweenManager		tween_manager;
 	private WeaponTweenAccessor	weapon_accessor;
 	private Character			character;
+	private Vector2				relative_pos;
 
 	public Weapon(Character character, float posX, float posY, float width, float height, String texture_path)
 	{
 		this.character = character;
+
 		texture = new Texture(Gdx.files.internal(texture_path));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
@@ -42,6 +44,10 @@ public class Weapon
 		sprite.setSize(width, height);
 		sprite.setOrigin(sprite.getWidth() / 2, 0);
 		sprite.setPosition(posX - sprite.getWidth() / 2, posY);
+
+		relative_pos = new Vector2(character.getPosition());
+		relative_pos.sub(new Vector2(sprite.getX(), sprite.getY()));
+		relative_pos.scl(-1);
 	}
 
 	public Rectangle getBounds()
@@ -155,5 +161,15 @@ public class Weapon
 					.start(tween_manager);
 		}
 
+	}
+
+	public Vector2 getRelativePosition()
+	{
+		return relative_pos;
+	}
+
+	public void setRelativePosition(float x, float y)
+	{
+		setPosition(character.getPosition().x + x, character.getPosition().y + y);
 	}
 }
