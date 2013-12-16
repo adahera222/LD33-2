@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.math.Vector2;
 import com.wandurr.ld28.Character.Direction;
+import com.wandurr.ld28.Character.State;
 
 public class CharacterController
 {
@@ -93,26 +94,31 @@ public class CharacterController
 		if(keys.get(Keys.LEFT))
 		{
 			player.setFacing(Direction.LEFT);
+			player.setState(State.WALKING);
 			acceleration.x = -ACCELERATION;
 		}
 		if(keys.get(Keys.RIGHT))
 		{
 			player.setFacing(Direction.RIGHT);
+			player.setState(State.WALKING);
 			acceleration.x = ACCELERATION;
 		}
 		if(keys.get(Keys.UP))
 		{
 			player.setFacing(Direction.UP);
+			player.setState(State.WALKING);
 			acceleration.y = ACCELERATION;
 		}
 		if(keys.get(Keys.DOWN))
 		{
 			player.setFacing(Direction.DOWN);
+			player.setState(State.WALKING);
 			acceleration.y = -ACCELERATION;
 		}
 		if(keys.get(Keys.ATTACK))
 		{
 			player.attack();
+			player.setState(State.ATTACKING);
 			attackReleased();
 		}
 		player.setAcceleration(acceleration);

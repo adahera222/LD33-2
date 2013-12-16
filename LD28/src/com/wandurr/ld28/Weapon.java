@@ -1,5 +1,7 @@
 package com.wandurr.ld28;
 
+import java.util.Random;
+
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
@@ -31,7 +33,7 @@ public class Weapon
 		this.character = character;
 
 		texture = new Texture(Gdx.files.internal(texture_path));
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
 		region = new TextureRegion(texture, 0, 0, texture.getWidth(), texture.getHeight());
 
@@ -88,6 +90,18 @@ public class Weapon
 
 	public void swing(Direction direction)
 	{
+		LD28Game game = (LD28Game) Gdx.app.getApplicationListener();
+		Random rand = new Random();
+		int random_number = rand.nextInt(2);
+		if(random_number == 0)
+		{
+			game.getSounds().swing.play(0.5f);
+		}
+		else
+		{
+			game.getSounds().swing2.play(0.5f);
+		}
+
 		if(direction.equals(Direction.LEFT))
 		{
 			Tween.to(this, WeaponTweenAccessor.POSITION_X, 0.2f)

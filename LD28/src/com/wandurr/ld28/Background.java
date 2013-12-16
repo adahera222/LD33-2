@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Background
 {
@@ -16,7 +17,7 @@ public class Background
 	public Background(float size, float posX, float posY, String texture_path)
 	{
 		texture = new Texture(Gdx.files.internal(texture_path));
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
 		region = new TextureRegion(texture, 0, 0, texture.getWidth(), texture.getHeight());
 
@@ -30,6 +31,11 @@ public class Background
 	public void draw(SpriteBatch batch)
 	{
 		batch.draw(region, sprite.getX(), sprite.getY(), sprite.getBoundingRectangle().width, sprite.getBoundingRectangle().height);
+	}
+
+	public Rectangle getBounds()
+	{
+		return sprite.getBoundingRectangle();
 	}
 
 }

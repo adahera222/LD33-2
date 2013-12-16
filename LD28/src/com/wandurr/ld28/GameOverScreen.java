@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameOverScreen implements Screen, InputProcessor
@@ -40,8 +41,20 @@ public class GameOverScreen implements Screen, InputProcessor
 		batch.begin();
 
 		font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-		font.draw(batch, game_over_text, -font.getBounds(game_over_text).width / 2, 0f);
-		font.draw(batch, retry_text, -font.getBounds(retry_text).width / 2, -font.getLineHeight());
+		font.drawMultiLine(batch, game_over_text + "\n" + retry_text, 0f, 0f, 1f, HAlignment.CENTER);
+		LD28Game game = (LD28Game) Gdx.app.getApplicationListener();
+		String score_text = "You brutally slaughtered \ninnocent ...things. Good job!";
+		font.setScale(0.8f);
+		font.drawMultiLine(batch, score_text, -font.getBounds(score_text).width / 1.5f, -font.getLineHeight() * 10f);
+
+		float score_x = -font.getBounds(score_text).width / 5f + 5f;
+		float score_y = -font.getLineHeight() * 10f + 2f;
+		font.setScale(1.0f);
+		font.setColor(0.5f, 0.8f, 0.0f, 1.0f);
+		font.draw(batch, "" + game.getPlayerScore(), score_x, score_y);
+
+		font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+		font.setScale(1.0f);
 		batch.end();
 	}
 

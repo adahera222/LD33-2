@@ -24,23 +24,35 @@ public class EnemyController
 
 		if(player_pos.x - 20 > enemy_pos.x)
 		{
-			acceleration.x += ACCELERATION;
+			if(!player.getBounds().overlaps(enemy.getBounds()))
+			{
+				acceleration.x += ACCELERATION;
+			}
 			enemy.setFacing(Direction.RIGHT);
 		}
 		else if(player_pos.x + 148 < enemy_pos.x)
 		{
-			acceleration.x += -ACCELERATION;
+			if(!player.getBounds().overlaps(enemy.getBounds()))
+			{
+				acceleration.x += -ACCELERATION;
+			}
 			enemy.setFacing(Direction.LEFT);
 		}
 
 		if(player_pos.y - 10 > enemy_pos.y)
 		{
-			acceleration.y += ACCELERATION;
+			if(!player.getBounds().overlaps(enemy.getBounds()))
+			{
+				acceleration.y += ACCELERATION;
+			}
 			enemy.setFacing(Direction.UP);
 		}
 		else if(player_pos.y + 138 < enemy_pos.y)
 		{
-			acceleration.y += -ACCELERATION;
+			if(!player.getBounds().overlaps(enemy.getBounds()))
+			{
+				acceleration.y += -ACCELERATION;
+			}
 			enemy.setFacing(Direction.DOWN);
 		}
 

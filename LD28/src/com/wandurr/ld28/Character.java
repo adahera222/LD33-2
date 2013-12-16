@@ -1,5 +1,7 @@
 package com.wandurr.ld28;
 
+import java.util.Random;
+
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
@@ -24,7 +26,7 @@ public class Character
 
 	public enum State
 	{
-		IDLE, WALKING, DYING
+		IDLE, WALKING, DYING, ATTACKING
 	}
 
 	public static final float	DAMP			= 0.93f;
@@ -48,7 +50,7 @@ public class Character
 	private TweenManager		tween_manager;
 	private CharacterAccessor	character_accessor;
 
-	public Character(GameScreen game_screen, float size, float posX, float posY, String texture_path)
+	public Character(GameScreen game_screen, float size, float posX, float posY, String texture_path, int health)
 	{
 		this.game_screen = game_screen;
 		texture = new Texture(Gdx.files.internal(texture_path));
@@ -73,7 +75,7 @@ public class Character
 		Tween.setWaypointsLimit(3);
 		Tween.setCombinedAttributesLimit(4);
 
-		health = 10;
+		this.health = health;
 	}
 
 	public void dispose()
@@ -241,6 +243,18 @@ public class Character
 	{
 		if(!taking_damage)
 		{
+			LD28Game game = (LD28Game) Gdx.app.getApplicationListener();
+			Random rand = new Random();
+			int random_number = rand.nextInt(2);
+			if(random_number == 0)
+			{
+				game.getSounds().hit.play(0.8f);
+			}
+			else
+			{
+				game.getSounds().hit2.play(0.8f);
+			}
+
 			taking_damage = true;
 			health -= 1;
 			Tween.to(this, CharacterAccessor.COLOR, 0.2f)
@@ -288,6 +302,16 @@ public class Character
 	public int getHealth()
 	{
 		return health;
+	}
+
+	public void setHealth(int health)
+	{
+		this.health = health;
+	}
+
+	public boolean isAttacking()
+	{
+		return attacking;
 	}
 
 }
